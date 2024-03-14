@@ -5,17 +5,24 @@ const Gameboard = (function () {
     ['', '', ''],
   ];
 
-  const setMarker = (index, marker) => {
+  // place a player's marker on the board
+  const setMarker = (row, col, marker) => {
     try {
-      if (index >= board.length) {
+      if (row >= board.length || col >= board[row].length) {
         throw Error('Index out of bounds');
-      } else if (board[index] !== '') {
+      } else if (board[row][col] !== '') {
         throw Error('This spot is occupied by another marker');
       }
 
-      board[index] = marker;
-    } catch (error) {}
+      board[row][col] = marker;
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const getBoard = () => board;
+
+  return { setMarker, getBoard };
 })();
 
 export default Gameboard;
