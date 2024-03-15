@@ -84,7 +84,6 @@ const GameLogic = (() => {
         Gameboard.getBoard()[y] === player.getMarker() &&
         Gameboard.getBoard()[z] === player.getMarker()
       ) {
-        printWinner(player);
         return true;
       }
     }
@@ -94,10 +93,6 @@ const GameLogic = (() => {
   const _draw = () => Gameboard.getEmptyFieldsIndex().length === 0;
   const isGameOver = () => _winner(_player1) || _winner(_player2) || _draw();
 
-  // play a round:
-  // print board
-  // check for winner/draw -> stop game if winner/draw, print winner/draw message
-  // if no winner ->  get input -> place player marker -> switch player -> repeat
   const playRound = (position) => {
     if (_winner(_player1)) return winnerMessage(_player1);
     if (_winner(_player2)) return winnerMessage(_player2);
@@ -114,8 +109,8 @@ const displayController = (() => {
   const messageEl = document.querySelector('#message');
 
   const updateScreen = () => {
-    for (let i = 0; i <= fieldsEl.length; i++) {
-      messageEl.textContent = 'X';
+    for (let i = 0; i < fieldsEl.length; i++) {
+      fieldsEl[i].textContent = Gameboard.getField(i);
     }
   };
 
@@ -123,7 +118,7 @@ const displayController = (() => {
     const index = +e.target.getAttribute('data-index');
     if (!GameLogic.isGameOver()) {
       GameLogic.playRound(index);
-      console.log(Gameboard.getBoard());
+      updateScreen();
     }
   };
 
