@@ -102,7 +102,7 @@ const GameLogic = (() => {
     if (_winner(_player1)) return winnerMessage(_player1);
     if (_winner(_player2)) return winnerMessage(_player2);
     if (_draw()) return drawMessage();
-    _activePlayer.chooseField(Gameboard, position - 1);
+    _activePlayer.chooseField(Gameboard, position);
     _switchPlayer();
   };
 
@@ -122,8 +122,8 @@ const displayController = (() => {
   const placeMarker = (e) => {
     const index = +e.target.getAttribute('data-index');
     if (!GameLogic.isGameOver()) {
+      GameLogic.playRound(index);
       console.log(Gameboard.getBoard());
-      //playRound(index);
     }
   };
 
