@@ -1,0 +1,40 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+header {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.gameboard {
+  margin: 0 auto;
+  margin-top: 100px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  border: 2px solid black;
+  width: 500px;
+  height: 500px;
+}
+
+.gameboard > div {
+  border: 1px solid black;
+}
+
+@media all and (max-width: 680px) {
+  .gameboard {
+    width: 300px;
+    height: 300px;
+  }
+}

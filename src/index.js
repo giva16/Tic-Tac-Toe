@@ -1,3 +1,4 @@
+import './css/styles.css';
 const Gameboard = (() => {
   const _board = new Array(9);
 
@@ -151,7 +152,7 @@ const GameLogic = (() => {
   };
 
   const playGame = () => {
-    while (!_winner(_player1) && !_winner(_player2)) {
+    while (!_winner(_player1) && !_winner(_player2) && !_draw()) {
       _playRound();
     }
   };
@@ -159,4 +160,4 @@ const GameLogic = (() => {
   return { _playRound, playGame };
 })();
 
-GameLogic.playGame();
+//GameLogic.playGame();
