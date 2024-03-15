@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Titan+One&display=swap');
+
 *,
 *::before,
 *::after {
@@ -6,15 +8,29 @@
   box-sizing: border-box;
 }
 
+:root {
+  --light-text-color: #fff5f5;
+}
+
+html,
 body {
   overflow-x: hidden;
+}
+
+body {
+  font-family: 'Roboto', sans-serif, 'Times New Roman', Times, serif;
   height: 100vh;
   width: 100vw;
+  background-color: #8d99ae;
 }
 
 header {
+  padding: 30px 0;
+  font-family: 'Titan One', 'Roboto', sans-serif;
   text-align: center;
   font-size: 2rem;
+  background-color: #023047;
+  color: var(--light-text-color);
 }
 
 .message {
@@ -52,20 +68,49 @@ header {
 }
 
 .controls {
-  margin-top: 40px;
+  margin: 20px 0 40px;
   width: 100%;
   text-align: center;
 }
 
 .controls > button {
-  font-size: 2rem;
   padding: 10px 20px;
   border-radius: 10px;
+  border: none;
+  background-color: #023047;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--light-text-color);
+}
+
+.controls > button:hover {
+  background-color: #043f5d;
+}
+
+.footer {
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background-color: #023047;
+  font-size: 1.2rem;
+  color: var(--light-text-color);
+}
+
+.footer .fab.fa-github {
+  color: white;
 }
 
 @media all and (max-width: 680px) {
   .gameboard {
     width: 300px;
     height: 300px;
+  }
+  html {
+    font-size: 12px;
   }
 }

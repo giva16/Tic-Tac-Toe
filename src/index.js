@@ -1,6 +1,7 @@
 'use strict';
 
 import './css/styles.css';
+import '@fortawesome/fontawesome-free/js/all';
 
 const Gameboard = (() => {
   const _board = ['', '', '', '', '', '', '', '', ''];
