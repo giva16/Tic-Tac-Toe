@@ -101,14 +101,15 @@ const GameLogic = (() => {
   const isGameOver = () => _winner(_player1) || _winner(_player2) || _draw();
 
   const playRound = (position) => {
-    if (_winner(_player1)) _message = winnerMessage(_player1);
-    if (_winner(_player2)) _message = winnerMessage(_player2);
-    if (_draw()) _message = drawMessage();
-
     // only switch player if the player made a valid move
     if (_activePlayer.chooseField(Gameboard, position)) {
       _switchPlayer();
+      _message = `Player ${_activePlayer.getMarker()}'s turn`;
     }
+
+    if (_winner(_player1)) _message = winnerMessage(_player1);
+    if (_winner(_player2)) _message = winnerMessage(_player2);
+    if (_draw()) _message = drawMessage();
   };
 
   return { playRound, isGameOver, getMessage };
@@ -118,25 +119,32 @@ const displayController = (() => {
   const fieldsEl = document.querySelectorAll('.field');
   const messageEl = document.querySelector('#message');
 
+  // update each field to show marker, show message before and after each round
   const updateScreen = () => {
     for (let i = 0; i < fieldsEl.length; i++) {
       fieldsEl[i].textContent = Gameboard.getField(i);
+    }
+    messageEl.textContent = GameLogic.getMessage();
+
+    // display result message if game is over
+    if (GameLogic.isGameOver()) {
+      messageEl.textContent = GameLogic.getMessage();
     }
   };
 
   const placeMarker = (e) => {
     const index = +e.target.getAttribute('data-index');
-    if (!GameLogic.isGameOver()) {
-      GameLogic.playRound(index);
-      updateScreen();
-      e.target.disabled = true;
-    } else {
-    }
+
+    if (!GameLogic.isGameOver()) GameLogic.playRound(index);
+    updateScreen();
   };
 
   fieldsEl.forEach((field) => {
     field.addEventListener('click', placeMarker);
   });
 
-  return { fieldsEl, messageEl, updateScreen };
+  // display round start message when the page is loaded
+  window.addEventListener('DOMContentLoaded', () => {
+    messageEl.textContent = GameLogic.getMessage();
+  });
 })();
