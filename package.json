@@ -4,7 +4,9 @@
   "description": "A Web version of the famous Tic-Tac-Toe game",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build": "webpack",
+    "dev": "webpack serve"
   },
   "keywords": [],
   "author": "G.R. van Gerven",

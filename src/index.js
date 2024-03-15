@@ -3,6 +3,13 @@ const Gameboard = (() => {
 
   const getBoard = () => _board;
 
+  // print each field in the game board, prints _ if the field is not set
+  const printBoard = () => {
+    for (let i = 0; i < 3; i++) {
+      console.log(_board[i] || '_', _board[i + 1] || '_', _board[i + 2] || '_');
+    }
+  };
+
   const getField = (index) => {
     try {
       if (index >= _board.length || index < 0) {
@@ -36,7 +43,7 @@ const Gameboard = (() => {
     }
   };
 
-  return { setMarker, getBoard, getField, getEmptyFieldsIndex };
+  return { setMarker, getBoard, getField, getEmptyFieldsIndex, printBoard };
 })();
 
 const Player = (marker) => {
@@ -51,14 +58,31 @@ const Player = (marker) => {
   return { getMarker, chooseField };
 };
 
-// Gameboard.setMarker(1, 'X');
-// Gameboard.setMarker(0, 'X');
-// Gameboard.setMarker(2, 'O');
-// Gameboard.setMarker(4, 'O');
-// Gameboard.setMarker(5, 'O');
+const GameLogic = (() => {
+  const player1 = Player('X');
+  const player2 = Player('O');
 
-const player1 = Player('X');
+  let activePlayer = player1;
 
-player1.chooseField(Gameboard, 2);
-console.log(Gameboard.getBoard());
-console.log(Gameboard.getEmptyFieldsIndex());
+  const getActivePlayer = () => activePlayer;
+
+  const switchPlayer = () => {
+    activePlayer = activePlayer === player1 ? player2 : player1;
+  };
+
+  //print initial message at the start of each round ("Player ...'s Turn" + Gameboard)
+  const roundStartPrompt = () => {
+    if (Gameboard.getBoard().length === Gameboard.getEmptyFieldsIndex().length) {
+      console.log('Welcome to Tic Tac Toe!\n\nPlayer X goes first!: ');
+    }
+    Gameboard.printBoard();
+  };
+
+  return { roundStartPrompt };
+})();
+
+// player1.chooseField(Gameboard, 2);
+// console.log(Gameboard.getBoard());
+// console.log(Gameboard.getEmptyFieldsIndex());
+
+GameLogic.roundStartPrompt();
