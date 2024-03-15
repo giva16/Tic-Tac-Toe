@@ -32,7 +32,11 @@ const Gameboard = (() => {
 
   // place a player's marker on the board
   const setMarker = (index, marker) => {
-    _board[index] = marker;
+    if (_board[index] === '') {
+      _board[index] = marker;
+      return true;
+    }
+    return false;
   };
 
   return { setMarker, getBoard, getField, getEmptyFieldsIndex };
@@ -43,7 +47,7 @@ const Player = (marker) => {
   const getMarker = () => _marker;
 
   const chooseField = (Gameboard, index) => {
-    Gameboard.setMarker(index, _marker);
+    return Gameboard.setMarker(index, _marker);
   };
   return { getMarker, chooseField };
 };
@@ -66,8 +70,11 @@ const GameLogic = (() => {
     [0, 4, 8],
     [2, 4, 6],
   ];
+
   let _activePlayer = _player1;
-  const getActivePlayer = () => _activePlayer;
+
+  let _message = `Player ${_activePlayer.getMarker()}'s turn:`;
+  const getMessage = () => _message;
 
   const _switchPlayer = () => {
     _activePlayer = _activePlayer === _player1 ? _player2 : _player1;
@@ -94,14 +101,17 @@ const GameLogic = (() => {
   const isGameOver = () => _winner(_player1) || _winner(_player2) || _draw();
 
   const playRound = (position) => {
-    if (_winner(_player1)) return winnerMessage(_player1);
-    if (_winner(_player2)) return winnerMessage(_player2);
-    if (_draw()) return drawMessage();
-    _activePlayer.chooseField(Gameboard, position);
-    _switchPlayer();
+    if (_winner(_player1)) _message = winnerMessage(_player1);
+    if (_winner(_player2)) _message = winnerMessage(_player2);
+    if (_draw()) _message = drawMessage();
+
+    // only switch player if the player made a valid move
+    if (_activePlayer.chooseField(Gameboard, position)) {
+      _switchPlayer();
+    }
   };
 
-  return { playRound, getActivePlayer, isGameOver };
+  return { playRound, isGameOver, getMessage };
 })();
 
 const displayController = (() => {
@@ -119,6 +129,8 @@ const displayController = (() => {
     if (!GameLogic.isGameOver()) {
       GameLogic.playRound(index);
       updateScreen();
+      e.target.disabled = true;
+    } else {
     }
   };
 
