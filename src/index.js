@@ -1,31 +1,29 @@
-import './css/styles.css';
-const Gameboard = (() => {
-  const _board = new Array(9);
+'use strict';
 
+import './css/styles.css';
+
+const Gameboard = (() => {
+  const _board = ['', '', '', '', '', '', '', '', ''];
   const getBoard = () => _board;
 
-  // print each field in the game board, prints _ if the field is not set
-  const printBoard = () => {
-    for (let i = 0; i < 9; i += 3) {
-      console.log(_board[i] || '_', _board[i + 1] || '_', _board[i + 2] || '_');
-    }
+  // // print each field in the game board, prints _ if the field is not set
+  // const printBoard = () => {
+  //   for (let i = 0; i < 9; i += 3) {
+  //     console.log(_board[i] || '_', _board[i + 1] || '_', _board[i + 2] || '_');
+  //   }
+  // };
+  const reset = () => {
+    for (let i in _board) field[i] = '';
   };
 
   const getField = (index) => {
-    try {
-      if (index >= _board.length || index < 0) {
-        throw new Error('Index out of bounds');
-      }
-      return _board[index];
-    } catch (error) {
-      console.log(error);
-    }
+    return _board[index];
   };
 
   const getEmptyFieldsIndex = () => {
     const emptyFields = [];
     for (let i = 0; i < _board.length; i++) {
-      if (_board[i] === undefined) {
+      if (_board[i] === '') {
         emptyFields.push(i);
       }
     }
@@ -34,28 +32,19 @@ const Gameboard = (() => {
 
   // place a player's marker on the board
   const setMarker = (index, marker) => {
-    try {
-      if (getField(index) !== undefined) {
-        throw new Error('This spot is taken');
-      }
-      _board[index] = marker;
-    } catch (error) {
-      console.log(error);
-    }
+    _board[index] = marker;
   };
 
-  return { setMarker, getBoard, getField, getEmptyFieldsIndex, printBoard };
+  return { setMarker, getBoard, getField, getEmptyFieldsIndex };
 })();
 
 const Player = (marker) => {
   let _marker = marker;
-
   const getMarker = () => _marker;
 
   const chooseField = (Gameboard, index) => {
     Gameboard.setMarker(index, _marker);
   };
-
   return { getMarker, chooseField };
 };
 
@@ -77,33 +66,15 @@ const GameLogic = (() => {
     [0, 4, 8],
     [2, 4, 6],
   ];
-
   let _activePlayer = _player1;
-
   const getActivePlayer = () => _activePlayer;
 
   const _switchPlayer = () => {
     _activePlayer = _activePlayer === _player1 ? _player2 : _player1;
   };
 
-  //print initial message at the start of each round ("Player ...'s Turn" + Gameboard) and gets input
-  const _getInput = () => {
-    if (Gameboard.getBoard().length === Gameboard.getEmptyFieldsIndex().length) {
-      return prompt('Welcome to Tic Tac Toe!\n\nPlayer X goes first!\n\nSelect a position on the board (0-8): ');
-    } else {
-      return prompt(`Player ${_activePlayer.getMarker()}'s turn\n\nSelect a position on the board (0-8):`);
-    }
-  };
-
-  // print winner message
-  const printWinner = (player) => {
-    console.log(`Player ${player.getMarker()} Wins!`);
-  };
-
-  // print draw message
-  const printDraw = () => {
-    console.log("It's a draw!");
-  };
+  const winnerMessage = (player) => `Player ${player.getMarker()} Wins!`;
+  const drawMessage = () => "It's a draw!";
 
   // check if there is a winner before round starts
   const _winner = (player) => {
@@ -121,43 +92,44 @@ const GameLogic = (() => {
   };
 
   const _draw = () => Gameboard.getEmptyFieldsIndex().length === 0;
+  const isGameOver = () => _winner(_player1) || _winner(player2) || _draw;
 
   // play a round:
   // print board
   // check for winner/draw -> stop game if winner/draw, print winner/draw message
   // if no winner ->  get input -> place player marker -> switch player -> repeat
-  const _playRound = () => {
-    Gameboard.printBoard();
-
-    if (_winner(_player1)) {
-      printWinner(_player1);
-      return;
-    }
-
-    if (_winner(_player2)) {
-      printWinner(_player2);
-      return;
-    }
-
-    if (_draw()) {
-      printDraw();
-      return;
-    }
-
-    const position = +_getInput();
-
-    _activePlayer.chooseField(Gameboard, position);
-
+  const playRound = (position) => {
+    if (_winner(_player1)) return winnerMessage(_player1);
+    if (_winner(_player2)) return winnerMessage(_player2);
+    if (_draw()) return drawMessage();
+    _activePlayer.chooseField(Gameboard, position - 1);
     _switchPlayer();
   };
 
-  const playGame = () => {
-    while (!_winner(_player1) && !_winner(_player2) && !_draw()) {
-      _playRound();
+  return { playRound, getActivePlayer, isGameOver };
+})();
+
+const displayController = (() => {
+  const fieldsEl = document.querySelectorAll('.field');
+  const messageEl = document.querySelector('#message');
+
+  const updateScreen = () => {
+    for (let i = 0; i <= fieldsEl.length; i++) {
+      messageEl.textContent = 'X';
     }
   };
 
-  return { _playRound, playGame };
-})();
+  const placeMarker = (e) => {
+    const index = +e.target.getAttribute('data-index');
+    console.log(Gameboard.getBoard());
+    if (!GameLogic.isGameOver()) {
+      //playRound(index);
+    }
+  };
 
-//GameLogic.playGame();
+  fieldsEl.forEach((field) => {
+    field.addEventListener('click', placeMarker);
+  });
+
+  return { fieldsEl, messageEl, updateScreen };
+})();

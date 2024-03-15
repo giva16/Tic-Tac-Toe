@@ -18,16 +18,9 @@ header {
 }
 
 .message {
+  margin: 40px 0;
   font-size: 2rem;
   text-align: center;
-}
-
-.message.start {
-  margin-top: 100px;
-}
-
-.message.result {
-  margin-top: 40px;
 }
 
 .gameboard {
@@ -39,6 +32,18 @@ header {
   border: 2px solid black;
   width: 500px;
   height: 500px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+}
+
+.marker {
+  font-size: 8rem;
+  font-weight: 600;
 }
 
 .gameboard > div {
