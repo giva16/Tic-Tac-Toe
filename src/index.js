@@ -92,7 +92,7 @@ const GameLogic = (() => {
   };
 
   const _draw = () => Gameboard.getEmptyFieldsIndex().length === 0;
-  const isGameOver = () => _winner(_player1) || _winner(_player2) || _draw;
+  const isGameOver = () => _winner(_player1) || _winner(_player2) || _draw();
 
   // play a round:
   // print board
