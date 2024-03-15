@@ -5,7 +5,7 @@ const Gameboard = (() => {
 
   // print each field in the game board, prints _ if the field is not set
   const printBoard = () => {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 9; i += 3) {
       console.log(_board[i] || '_', _board[i + 1] || '_', _board[i + 2] || '_');
     }
   };
@@ -85,12 +85,13 @@ const GameLogic = (() => {
     _activePlayer = _activePlayer === _player1 ? _player2 : _player1;
   };
 
-  //print initial message at the start of each round ("Player ...'s Turn" + Gameboard)
-  const _roundStartPrompt = () => {
+  //print initial message at the start of each round ("Player ...'s Turn" + Gameboard) and gets input
+  const _getInput = () => {
     if (Gameboard.getBoard().length === Gameboard.getEmptyFieldsIndex().length) {
-      console.log('Welcome to Tic Tac Toe!\n\nPlayer X goes first!: ');
+      return prompt('Welcome to Tic Tac Toe!\n\nPlayer X goes first!\n\nSelect a position on the board (0 -9): ');
+    } else {
+      return prompt(`Player ${_activePlayer.getMarker()}'s turn\n\nSelect a position on the board (0 -9):`);
     }
-    Gameboard.printBoard();
   };
 
   // print winner message
@@ -115,18 +116,33 @@ const GameLogic = (() => {
 
   // play a round:
   // print board
-  // check for winner
-  // if no winner
-  const _playRound = () => {};
+  // check for winner -> stop game if winner, print winner message
+  // if no winner ->  get input -> place player marker -> switch player -> repeat
+  const _playRound = () => {
+    if (_checkWinner(_player1)) {
+      printWinner(_player1);
+      return;
+    }
 
-  return { _roundStartPrompt, _checkWinner };
+    if (_checkWinner(_player2)) {
+      printWinner(_player2);
+      return;
+    }
+
+    const position = +_getInput();
+    console.log(position);
+    _activePlayer.chooseField(Gameboard, position);
+
+    _switchPlayer();
+  };
+
+  return { _playRound };
 })();
-
-const player1 = Player('O');
-player1.chooseField(Gameboard, 0);
-player1.chooseField(Gameboard, 3);
-player1.chooseField(Gameboard, 6);
-GameLogic._checkWinner(player1);
+const player = Player('X');
+player.chooseField(Gameboard, 0);
+player.chooseField(Gameboard, 1);
+player.chooseField(Gameboard, 2);
+Gameboard.printBoard();
 // console.log(Gameboard.getEmptyFieldsIndex());
 
 //GameLogic._checkWinner();
