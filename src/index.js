@@ -12,8 +12,8 @@ const Gameboard = (() => {
   //     console.log(_board[i] || '_', _board[i + 1] || '_', _board[i + 2] || '_');
   //   }
   // };
-  const reset = () => {
-    for (let i in _board) field[i] = '';
+  const resetBoard = () => {
+    for (let i in _board) _board[i] = '';
   };
 
   const getField = (index) => {
@@ -39,7 +39,7 @@ const Gameboard = (() => {
     return false;
   };
 
-  return { setMarker, getBoard, getField, getEmptyFieldsIndex };
+  return { setMarker, getBoard, getField, getEmptyFieldsIndex, resetBoard };
 })();
 
 const Player = (marker) => {
@@ -83,6 +83,11 @@ const GameLogic = (() => {
   const winnerMessage = (player) => `Player ${player.getMarker()} Wins!`;
   const drawMessage = () => "It's a draw!";
 
+  const reseteGameLogic = () => {
+    _activePlayer = _player1;
+    _message = _message = `Player ${_activePlayer.getMarker()}'s turn`;
+  };
+
   // check if there is a winner before round starts
   const _winner = (player) => {
     for (let [x, y, z] of _WINPOSITIONS) {
@@ -106,18 +111,18 @@ const GameLogic = (() => {
       _switchPlayer();
       _message = `Player ${_activePlayer.getMarker()}'s turn`;
     }
-
     if (_winner(_player1)) _message = winnerMessage(_player1);
     if (_winner(_player2)) _message = winnerMessage(_player2);
     if (_draw()) _message = drawMessage();
   };
 
-  return { playRound, isGameOver, getMessage };
+  return { playRound, isGameOver, getMessage, reseteGameLogic };
 })();
 
 const displayController = (() => {
   const fieldsEl = document.querySelectorAll('.field');
   const messageEl = document.querySelector('#message');
+  const resetBtn = document.querySelector('#resetBtn');
 
   // update each field to show marker, show message before and after each round
   const updateScreen = () => {
@@ -125,17 +130,18 @@ const displayController = (() => {
       fieldsEl[i].textContent = Gameboard.getField(i);
     }
     messageEl.textContent = GameLogic.getMessage();
-
-    // display result message if game is over
-    if (GameLogic.isGameOver()) {
-      messageEl.textContent = GameLogic.getMessage();
-    }
   };
 
   const placeMarker = (e) => {
     const index = +e.target.getAttribute('data-index');
 
     if (!GameLogic.isGameOver()) GameLogic.playRound(index);
+    updateScreen();
+  };
+
+  const resetGame = () => {
+    Gameboard.resetBoard();
+    GameLogic.reseteGameLogic();
     updateScreen();
   };
 
@@ -147,4 +153,6 @@ const displayController = (() => {
   window.addEventListener('DOMContentLoaded', () => {
     messageEl.textContent = GameLogic.getMessage();
   });
+
+  resetBtn.addEventListener('click', resetGame);
 })();
