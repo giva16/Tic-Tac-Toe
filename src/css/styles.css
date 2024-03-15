@@ -17,9 +17,22 @@ header {
   font-size: 2rem;
 }
 
+.message {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.message.start {
+  margin-top: 100px;
+}
+
+.message.result {
+  margin-top: 40px;
+}
+
 .gameboard {
   margin: 0 auto;
-  margin-top: 100px;
+  margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -30,6 +43,7 @@ header {
 
 .gameboard > div {
   border: 1px solid black;
+  cursor: pointer;
 }
 
 @media all and (max-width: 680px) {
